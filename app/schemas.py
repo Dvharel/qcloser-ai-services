@@ -1,34 +1,46 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any, Literal
+from typing import Optional, Literal, Dict, Any, List
+
+
+Language = Literal["auto", "he", "en"]
+
 
 class AnalyzeRequest(BaseModel):
+    recording_id: int
     transcript: str
-    language: Optional[str] = Field(default="auto", description="he/en/None")
-    org_id: Optional[int] = None
-    recording_id: Optional[int] = None
+    language: Language = "auto"
+    deal_title: Optional[str] = None
+
 
 class AnalyzeResponse(BaseModel):
-    nuggets: List[str] = Field(default_factory=list)
-    patterns: List[str] = Field(default_factory=list)
-    risks: List[str] = Field(default_factory=list)
-    next_questions: List[str] = Field(default_factory=list)
-    closing_outlook: Dict[str, Any]
-    raw_response: Optional[str] = None
+    analysis_text: str
+    raw: Optional[Dict[str, Any]] = None
 
-class FollowupRequest(BaseModel):
-    analysis: AnalyzeResponse
-    channel: Literal["email"] = "whatsapp" # maybe add whatsapp later
-    transcript: str
-    analysis: str
-    language: Optional[str] = None
-    channel: str = "whatsapp"   # whatsapp/email
-
-class FollowupResponse(BaseModel):
-    followup_message: str
-    sales_brief: str
-    continuation_plan: str
 
 class FeedbackRequest(BaseModel):
     recording_id: int
-    rating: int = Field(ge=1, le=5)
-    notes: Optional[str] = None
+    transcript: str
+    analysis_text: str
+    language: Language = "auto"
+
+
+class FeedbackResponse(BaseModel):
+    feedback_text: str
+    raw: Optional[Dict[str, Any]] = None
+
+
+class FollowupRequest(BaseModel):
+    recording_id: int
+    transcript: str
+    analysis_text: str
+    language: Language = "auto"
+    channel: str = "whatsapp"
+    tone: str = "friendly"
+
+
+class FollowupResponse(BaseModel):
+    followup: Dict[str, Any] = Field(
+        ...,
+        description="JSON with keys: subject, message_to_client, brief_for_rep, next_steps",
+    )
+    raw: Optional[Dict[str, Any]] = None

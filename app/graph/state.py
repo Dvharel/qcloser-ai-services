@@ -6,24 +6,24 @@ class AnalyzeState(TypedDict):
     transcript: str
     language: str
     deal_title: Optional[str]
-    analysis_text: Optional[str]
+    analysis_json: Optional[Dict[str, Any]]
     raw: Optional[Dict[str, Any]]
 
 
 class FeedbackState(TypedDict):
     recording_id: int
     transcript: str
-    analysis_text: str
+    analysis_json: Optional[Dict[str, Any]]
     language: str
-    feedback_text: Optional[str]
+    feedback_json: Optional[str]
     raw: Optional[Dict[str, Any]]
 
 
 class FollowupState(TypedDict):
     recording_id: int
     transcript: str
-    analysis_text: str
-    feedback_text: str
+    analysis_json: Optional[Dict[str, Any]]
+    feedback_json: str
     language: str
     channel: str
     tone: str

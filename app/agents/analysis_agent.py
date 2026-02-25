@@ -1,12 +1,28 @@
-def run_analysis_agent(state):
-    transcript = state["transcript"]
-    lang = state["language"]
-    deal_title = state.get("deal_title")
+from pathlib import Path
+from app.providers.openai_provider import chat_completion
 
-    # TODO: Replace with sales-book prompt + LLM call
-    # For now: deterministic output so pipeline works
-    analysis_text = f"[ANALYSIS][{lang}] Deal={deal_title or 'N/A'}\nSummary:\n{transcript[:400]}..."
+PROMPT_PATH = Path(__file__).parent / "prompts" / "analyze.md"
 
-    state["analysis_text"] = analysis_text
-    state["raw"] = {"stub": True}
-    return state
+
+def _load_prompt() -> str:
+    return PROMPT_PATH.read_text(encoding="utf-8")
+
+
+def run_analysis_agent(*, transcript: str, language: str) -> dict:
+    system_prompt = _load_prompt()
+
+    # Optional: help the model keep language consistent
+    user_prompt = f"""Transcript language: {language}
+Transcript:
+{transcript}
+"""
+
+    analysis_text = chat_completion(
+        system=system_prompt,
+        user=user_prompt,
+    )
+
+    return {
+        "analysis_json": {"analysis_text": analysis_text},
+        "raw": None,
+    }

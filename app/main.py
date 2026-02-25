@@ -50,11 +50,11 @@ def analyze(
         "transcript": req.transcript,
         "language": req.language,
         "deal_title": req.deal_title,
-        "analysis_text": None,
+        "analysis_json": None,
         "raw": None,
     }
     out = _analyze_graph.invoke(state)
-    return AnalyzeResponse(analysis_text=out["analysis_text"], raw=out.get("raw"))
+    return AnalyzeResponse(analysis_json=out["analysis_json"], raw=out.get("raw"))
 
 
 @app.post("/feedback", response_model=FeedbackResponse)
@@ -67,13 +67,14 @@ def feedback(
     state = {
         "recording_id": req.recording_id,
         "transcript": req.transcript,
-        "analysis_text": req.analysis_text,
+        "analysis_json": req.analysis_json,
         "language": req.language,
-        "feedback_text": None,
+        "deal_title": req.deal_title,
+        "feedback_json": None,
         "raw": None,
     }
     out = _feedback_graph.invoke(state)
-    return FeedbackResponse(feedback_text=out["feedback_text"], raw=out.get("raw"))
+    return FeedbackResponse(feedback_json=out["feedback_json"], raw=out.get("raw"))
 
 
 @app.post("/followup", response_model=FollowupResponse)
@@ -86,7 +87,8 @@ def followup(
     state = {
         "recording_id": req.recording_id,
         "transcript": req.transcript,
-        "analysis_text": req.analysis_text,
+        "deal_title": req.deal_title,
+        "analysis_json": req.analysis_json,
         "language": req.language,
         "channel": req.channel,
         "tone": req.tone,

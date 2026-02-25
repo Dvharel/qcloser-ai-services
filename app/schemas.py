@@ -13,34 +13,37 @@ class AnalyzeRequest(BaseModel):
 
 
 class AnalyzeResponse(BaseModel):
-    analysis_text: str
+    analysis_json: Dict[str, Any] = Field(
+        ..., description="Freeform SPIN analysis wrapped in JSON"
+    )
     raw: Optional[Dict[str, Any]] = None
 
 
 class FeedbackRequest(BaseModel):
     recording_id: int
     transcript: str
-    analysis_text: str
+    analysis_json: Dict[str, Any]
+    deal_title: str
     language: Language = "auto"
 
 
 class FeedbackResponse(BaseModel):
-    feedback_text: str
+    feedback_json: Dict[str, Any] = Field(
+        ..., description="Freeform SPIN coaching feedback wrapped in JSON"
+    )
     raw: Optional[Dict[str, Any]] = None
 
 
 class FollowupRequest(BaseModel):
-    recording_id: int
     transcript: str
-    analysis_text: str
+    analysis_json: Dict[str, Any]
     language: Language = "auto"
-    channel: str = "whatsapp"
+    deal_title: str
+    recording_id: int
+    channel: str = "email"
     tone: str = "friendly"
 
 
 class FollowupResponse(BaseModel):
-    followup: Dict[str, Any] = Field(
-        ...,
-        description="JSON with keys: subject, message_to_client, brief_for_rep, next_steps",
-    )
+    followup: Dict[str, Any]
     raw: Optional[Dict[str, Any]] = None

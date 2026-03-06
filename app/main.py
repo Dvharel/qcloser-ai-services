@@ -20,6 +20,11 @@ app = FastAPI(title="QCloser AI Service", version="0.1")
 AI_SERVICE_TOKEN = os.getenv("AI_SERVICE_TOKEN")
 
 
+@app.get("/health")
+def health():
+    return {"status": "ok", "message": "FastAPI in Q-closer backend is alive"}
+
+
 def verify_token(x_ai_token: str | None):
     if not AI_SERVICE_TOKEN:
         raise HTTPException(

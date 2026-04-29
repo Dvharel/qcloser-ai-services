@@ -9,7 +9,7 @@ You receive:
 
 Return VALID JSON only, with exactly these keys:
 
-- "client_message": string (copy-paste ready for WhatsApp/email)
+- "message": string (copy-paste ready for WhatsApp/email)
 - "subject": string
 - "brief_for_rep": string (what happened + buyer motivations)
 - "next_steps": array of strings (concrete steps)
